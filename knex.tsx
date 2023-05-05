@@ -70,5 +70,5 @@ knex('users')
 }
 
 //connect()
-// create()
+//create()
 update()
