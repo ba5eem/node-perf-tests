@@ -1,4 +1,4 @@
-# ORMs for Node.js: A Performance and Feature Comparison of Sequelize, Knex, and Prisma
+# ORMs for Node.js: A Performance Comparison of Sequelize, Knex, and Prisma
 
 
 ## In my recent project, I aimed to measure the performance of various ORMs in terms of how quickly they can perform database operations. To achieve this, I connected to a Docker PostgreSQL instance with Node.js using different ORMs, including [Sequelize](https://sequelize.org/), [Knex](https://knexjs.org/) and [Prisma](https://www.prisma.io/). Additionally, I explored connecting to PostgreSQL without using an ORM to have a basis for comparison.
