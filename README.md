@@ -1,3 +1,17 @@
+# Performance Tests - NodeJS
+
+- Hashing
+- ORM's
+
+
+## "I was interested in evaluating password hashing algorithms in Node.js, including `pbkdf2`, `bcrypt`, and `argon2`, and wanted to know how to test the time cost of these algorithms. My focus was on using and optimizing password hashing algorithms in Node.js, and I used the built-in `perf_hooks` module to measure the time and `process.memoryUsage().heapUsed` method to measure memory usage."
+
+
+### Results:
+![Hashing Chart](hashing.png)
+
+
+
 # ORMs for Node.js: A Performance Comparison of Sequelize, Knex, and Prisma
 
 

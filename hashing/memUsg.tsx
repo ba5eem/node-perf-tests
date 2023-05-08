@@ -31,7 +31,7 @@ function pdkdftMemUsage(){
     console.log(`pbkdf2 used approximately ${memoryUsed} bytes of memory.`);
   });
 }
-
+pdkdftMemUsage()
 
 function bkryptMemUsage(){
     let bcryptStart = performance.now();
@@ -81,5 +81,5 @@ function argMemUsage() {
 
 }
 
-argMemUsage();
+// argMemUsage();
 
