@@ -1,43 +1,57 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-
 const argon2 = require('argon2');
+const { performance } = require('perf_hooks');
 
-const password = 'your-password-here';
-const salt = crypto.randomBytes(16);
+// Parameters for the benchmarks
+const password = 'password';
+const salt = 'salt';
+const iterations = 100000;
+const hashLength = 64;
+const memoryCost = 12; // Controls the number of memory rounds
 
-async function measureExecutionTime(fn, ...args) {
-  const start = process.hrtime.bigint();
-  await fn(...args);
-  const end = process.hrtime.bigint();
-  return Number(end - start) / 1e6; // return time in milliseconds
+// Benchmark pbkdf2
+function pbkdft(){
+  let pbkdf2Start = performance.now();
+  crypto.pbkdf2(password, salt, iterations, hashLength, 'sha512', (err, derivedKey) => {
+    if (err) throw err;
+    let pbkdf2End = performance.now();
+    console.log(`pbkdf2: ${pbkdf2End - pbkdf2Start} ms`);
+  });
 }
 
-(async () => {
-  // PBKDF2
-  const pbkdf2Rounds = 10000;
-  const pbkdf2Time = await measureExecutionTime(
-    crypto.pbkdf2,
-    password,
-    salt,
-    pbkdf2Rounds,
-    64,
-    'sha512'
-  );
-  console.log(`PBKDF2 execution time: ${pbkdf2Time} ms`);
+// // // Benchmark bcrypt
+function bkrypt(){
+  let bcryptStart = performance.now();
+  bcrypt.hash(password, 10, (err, hash) => {
+    if (err) throw err;
+    let bcryptEnd = performance.now();
+    console.log(`bcrypt: ${bcryptEnd - bcryptStart} ms`);
+  });
+}
+
+
+// Benchmark argon2
+const hashingConfig = { // based on OWASP cheat sheet recommendations (as of March, 2022)
+    parallelism: 1,
+    memoryCost: 64000, // mb
+    timeCost: 100 // number of itetations
+}
+function hashArgon() {
+    let argon2Start = performance.now();
+    let salt = crypto.randomBytes(16);
+    argon2.hash(password, {
+        ...hashingConfig,
+        salt,
+    }).then(res => {
+      let argon2End = performance.now();
+      console.log(`argon2: ${argon2End - argon2Start} ms`);
+    }).catch(e => console.log(e))
+}
 
 
 
- // Bcrypt
-  const bcryptRounds = 10;
-  const bcryptTime = await measureExecutionTime(
-    bcrypt.hash,
-    password,
-    bcryptRounds
-  );
-  console.log(`Bcrypt execution time: ${bcryptTime} ms`);
+process.argv[2] === "pbk" ? pbkdft() : null
+process.argv[2] === "bkr" ? bkrypt() : null
+process.argv[2] === "arg" ? hashArgon() : null
 
-//  Argon2
-  const argon2Time = await measureExecutionTime(argon2.hash, password);
-  console.log(`Argon2 execution time: ${argon2Time} ms`);
-})();
